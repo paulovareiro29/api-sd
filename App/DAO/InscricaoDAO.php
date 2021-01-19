@@ -26,9 +26,21 @@ class InscricaoDAO extends Connection {
     }
 
     public function insert($inscricao){
-        $id = $this->db->alunocurso()->insert($inscricao);
+     
+        $data = array();
+        foreach($inscricao['aluno_id'] as $aluno){
+            if(!isset($aluno['nota'])){
+                $aluno['nota'] = null;
+            }
 
-        return $id;
+            array_push($data,$this->db->alunocurso()->where('curso_id',)->insert([
+                'curso_id' => $inscricao['curso_id'],
+                'aluno_id' => $aluno['aluno_id'],
+                'nota' => $aluno['nota']
+            ]));
+        }
+
+        return $data;
     }
 
     public function update($inscricao){

@@ -36,7 +36,9 @@ class CursoDAO extends Connection {
 
     public function get($id){
         $curso = $this->db->curso()->where('id', $id)->fetch();
-
+        if(!$curso){
+            return null;
+        } 
         $inscricoes = array();
         foreach($this->db->alunocurso()->where('curso_id', $curso['id']) as $inscricao){
             array_push($inscricoes, [
