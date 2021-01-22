@@ -11,6 +11,29 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 final class UserController{
 
+    public function login(Request $request, Response $response, array $args): Response {
+        $userDAO = new UserDAO();
+
+        $body = $request->getParsedBody(); 
+        $result = $userDAO->login($body);
+
+        if(!$result){
+            $response->getBody()->write(json_encode("Unauthorized") , JSON_UNESCAPED_UNICODE);
+
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(401);
+        }
+
+        $response->getBody()->write(json_encode($result) , JSON_UNESCAPED_UNICODE);
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+    } 
+
+    //CRUD
+
     public function index(Request $request, Response $response, array $args): Response {
         $userDAO = new UserDAO();
         $users = $userDAO->getAll();
